@@ -1,22 +1,21 @@
-﻿Build started 11/19/2014 10:57:18 AM.
+﻿Build started 11/24/2014 7:52:35 PM.
      1>Project "C:\Users\Joe\Dropbox\College\2014-2 Fall\Optimization Methods\Optim-project5\gorwal5\gorwal5\gorwal5.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Touching "Debug\gorwal5.unsuccessfulbuild".
        ClCompile:
          c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt p5.cpp
          p5.cpp
-     1>c:\users\joe\dropbox\college\2014-2 fall\optimization methods\optim-project5\gorwal5\gorwal5\p5.cpp(116): warning C4101: 'x' : unreferenced local variable
+     1>c:\users\joe\dropbox\college\2014-2 fall\optimization methods\optim-project5\gorwal5\gorwal5\p5.cpp(180): warning C4101: 'x' : unreferenced local variable
        ManifestResourceCompile:
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /nologo /fo"Debug\gorwal5.exe.embed.manifest.res" Debug\gorwal5_manifest.rc 
+         All outputs are up-to-date.
        Link:
          c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Joe\Dropbox\College\2014-2 Fall\Optimization Methods\Optim-project5\gorwal5\Debug\gorwal5.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\gorwal5.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Joe\Dropbox\College\2014-2 Fall\Optimization Methods\Optim-project5\gorwal5\Debug\gorwal5.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Joe\Dropbox\College\2014-2 Fall\Optimization Methods\Optim-project5\gorwal5\Debug\gorwal5.lib" /MACHINE:X86 Debug\gorwal5.exe.embed.manifest.res
          Debug\p5.obj
        Manifest:
          C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\gorwal5.exe.embed.manifest" /manifest Debug\gorwal5.exe.intermediate.manifest
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /nologo /fo"Debug\gorwal5.exe.embed.manifest.res" Debug\gorwal5_manifest.rc 
+         All outputs are up-to-date.
        LinkEmbedManifest:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Joe\Dropbox\College\2014-2 Fall\Optimization Methods\Optim-project5\gorwal5\Debug\gorwal5.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\gorwal5.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Joe\Dropbox\College\2014-2 Fall\Optimization Methods\Optim-project5\gorwal5\Debug\gorwal5.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Joe\Dropbox\College\2014-2 Fall\Optimization Methods\Optim-project5\gorwal5\Debug\gorwal5.lib" /MACHINE:X86 Debug\gorwal5.exe.embed.manifest.res
-         Debug\p5.obj
+         All outputs are up-to-date.
          gorwal5.vcxproj -> C:\Users\Joe\Dropbox\College\2014-2 Fall\Optimization Methods\Optim-project5\gorwal5\Debug\gorwal5.exe
        FinalizeBuildStatus:
          Deleting file "Debug\gorwal5.unsuccessfulbuild".
@@ -25,4 +24,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:12.60
+Time Elapsed 00:00:01.15

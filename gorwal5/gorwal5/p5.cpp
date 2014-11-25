@@ -107,76 +107,113 @@ bool maze::isLegal(int i, int j)
 void maze::mapMazeToGraph(graph &g)
 // Create a graph g that represents the legal moves in the maze m.
 {
-	//already have a graph, g, of the correct size.
-	
-	for(int i =0; i<row; i++)
+	int first, second, totalnodes = cols*rows;
+
+	//create all nodes of the graph (one for every maze coordinate)
+	for(int x=0; x < totalnodes; x++)
+		g.addNode();
+
+	//create all edges. current cell is i, j
+	for(int i =0; i<rows; i++)
 	{
-		for(int j=0; j<col; j++)
+		for(int j=0; j<cols; j++)
 		{
+			//If current cell is not empty, no edges can connect here
+			if(!value[i][j])
+				continue;
+			
+			
 			//Up, (i-1, j)
 			if(i != 0)
-				if(isLegal(i-1, j)
-					//Create edge
+				if(isLegal(i-1, j))
+				{
+					if(value[i-1][j])
+					{
+						first = i*cols + j;
+						second = (i-1)*cols + j;
+						g.addEdge(first, second);
+					}
+				}	
 
 			//Down (i+1, j)
-			if(i != row-1);
-				if(isLegal(i+1, j);
-					//Create edge
+			if(i != rows-1)
+				if(isLegal(i+1, j))
+				{
+					if(value[i+1][j])
+					{
+						first = i*cols + j;
+						second = (i+1)*cols + j;
+						g.addEdge(first, second);
+					}
+				}
 
 			//left (i, j-1)
 			if(j != 0)
-				if(isLegal(i, j-1)
-					//create edge
+				if(isLegal(i, j-1))
+				{
+					if(value[i][j-1])
+					{
+						first = i*cols + j;
+						second = i*cols + j-1;
+						g.addEdge(first, second);
+					}
+				}
 
 			//right (i, j+1)
-			if(j != col-1)
-				if(isLegal(i, j+1)
-					//create edge
+			if(j != cols-1)
+				if(isLegal(i, j+1))
+				{
+					if(value[i][j+1])
+					{
+						first = i*cols + j;
+						second = i*cols + j+1;
+						g.addEdge(first, second);
+					}
+				}
 
 		}
 	}
-	
-	//for each cell in maze
-		//for each adjacent cell
-			//if legal move, add edge in graph
+	g.printEdges();
+	g.printNodes();
 	
 }
 
 int main()
 {
-   char x;
-   ifstream fin;
+	char x;
+	ifstream fin;
    
-   // Read the maze from the file.
-   string fileName = "maze1.txt";
+	// Read the maze from the file.
+	string fileName = "maze1.txt";
 
-   fin.open(fileName.c_str());
-   if (!fin)
-   {
-      cerr << "Cannot open " << fileName << endl;
-      exit(1);
-   }
+	fin.open(fileName.c_str());
+	if (!fin)
+	{
+		cerr << "Cannot open " << fileName << endl;
+		exit(1);
+	}
 
-   try
-   {
+	try
+	{
+		while (fin && fin.peek() != 'Z')
+		{
+			maze m(fin);
+			graph g;
+			m.print(7, 10, 0, 0);
+			m.mapMazeToGraph(g);
+		}
 
-      graph g;
-      while (fin && fin.peek() != 'Z')
-      {
-         maze m(fin);
-		 m.print(7, 10, 0, 0);
-      }
 
 
-   } 
-   catch (indexRangeError &ex) 
-   { 
-      cout << ex.what() << endl; exit(1);
-   }
-   catch (rangeError &ex)
-   {
-      cout << ex.what() << endl; exit(1);
-   }
+	} 
+	catch (indexRangeError &ex) 
+	{ 
+		cout << ex.what() << endl; exit(1);
+	}
+	catch (rangeError &ex)
+	{
+		cout << ex.what() << endl; exit(1);
+	}
 
-   system("pause");
+	system("pause");
 }

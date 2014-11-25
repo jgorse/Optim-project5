@@ -15,6 +15,7 @@ int const MaxNumNodex = 9999;
 typedef int NodeWeight;
 typedef int EdgeWeight;
 
+//Node class begin
 class node
 {
    public:
@@ -147,7 +148,6 @@ bool node::isVisited() const
    return visited;
 }
 
-
 ostream &operator<<(ostream &ostr, const node &n)
 {
    ostr << "node: " << n.getId() << " weight: " << n.getWeight() 
@@ -155,7 +155,10 @@ ostream &operator<<(ostream &ostr, const node &n)
 
    return ostr;
 }
+//Node class end
 
+
+//Edge class begin
 class edge
 {
    public:
@@ -352,7 +355,9 @@ ostream &operator<<(ostream &ostr, const edge &e)
 
    return ostr;
 }
+//Edge class end
 
+//Graph class begin
 class graph
 {
   public:

@@ -1,11 +1,10 @@
-﻿Build started 11/24/2014 7:52:35 PM.
+﻿Build started 11/24/2014 11:13:30 PM.
      1>Project "C:\Users\Joe\Dropbox\College\2014-2 Fall\Optimization Methods\Optim-project5\gorwal5\gorwal5\gorwal5.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
-         Touching "Debug\gorwal5.unsuccessfulbuild".
+         Creating "Debug\gorwal5.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
          c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt p5.cpp
          p5.cpp
-     1>c:\users\joe\dropbox\college\2014-2 fall\optimization methods\optim-project5\gorwal5\gorwal5\p5.cpp(180): warning C4101: 'x' : unreferenced local variable
        ManifestResourceCompile:
          All outputs are up-to-date.
        Link:
@@ -24,4 +23,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.15
+Time Elapsed 00:00:01.32

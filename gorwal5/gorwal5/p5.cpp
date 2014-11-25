@@ -20,6 +20,8 @@ class maze
       void setMap(int i, int j, int n);
       int getMap(int i, int j) const;
       void mapMazeToGraph(graph &g);
+	  void findPathNonRecursive(graph &g);
+
 
    private:
       int rows; // number of rows in the maze
@@ -173,14 +175,95 @@ void maze::mapMazeToGraph(graph &g)
 
 		}
 	}
-	g.printEdges();
-	g.printNodes();
 	
+}
+
+void maze::findPathNonRecursive(graph &g)
+{
+	vector<string> moves;
+	bool win = false;
+
+	int current = 0, next = 0, numnodes = g.numNodes();
+	g.getNode(current).visit();
+
+	for(next = numnodes-1; next >= 0; next--)//check every node
+	{
+		if(current == numnodes - 1)
+		{
+			win = true;
+			break;
+		}
+		if(g.isEdge(current, next)) //if current has an adjcent node
+		{
+			if(!g.getNode(next).isVisited())//if adjacent node is unvisited
+			{
+				g.getNode(next).visit();//visit it and restart for loop
+				if(next == current+1)
+					moves.push_back("right");
+				if(next == current-1)
+					moves.push_back("left");
+				if(next == current+cols)
+					moves.push_back("down");
+				if(next == current-cols)
+					moves.push_back("up");
+
+				current = next;
+				next = numnodes;
+				continue;
+			}
+		}
+		if(next == 0)//no adjacent unvisited nodes
+		{
+			g.getNode(current).mark();//mark current node so we don't go back to it
+			
+			//visit adjacent visited but unmarked node
+			for(int temp = numnodes-1; temp >= 0; temp--)
+			{	
+				if(g.isEdge(current, temp)) //if current has an adjcent node
+				{
+					if(g.getNode(temp).isVisited() && !g.getNode(temp).isMarked())//if adjacent node is unvisited
+					{
+						moves.pop_back();
+						current = temp;//move back to it
+						next = numnodes;//reset for next outer 'for' loop run
+						temp = 0;//break out of this 'for' loop
+						continue;
+					}
+				}
+			}
+		}
+	}
+	
+	if(win)
+	{
+		int i = 0, j = 0, count = moves.size();
+		for(int x = 0; x<count; x++)
+		{
+			print(7, 10, i, j);
+			cout<<"\n\n"<<moves[x]<<"\n";
+
+			if(moves[x] == "up")
+				i--;
+			if(moves[x] == "down")
+				i++;
+			if(moves[x] == "left")
+				j--;
+			if(moves[x] == "right")
+				j++;
+			
+		}
+		print(7, 10, i, j);
+	}
+	else
+	{
+		cout<<"No solution to this puzzle\n";
+	}
+
 }
 
 int main()
 {
-	char x;
+	//char x;
 	ifstream fin;
    
 	// Read the maze from the file.
@@ -199,8 +282,8 @@ int main()
 		{
 			maze m(fin);
 			graph g;
-			m.print(7, 10, 0, 0);
 			m.mapMazeToGraph(g);
+			m.findPathNonRecursive(g);
 		}
 
 

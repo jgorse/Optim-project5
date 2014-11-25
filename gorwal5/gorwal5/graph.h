@@ -45,7 +45,7 @@ class node
       bool marked;
       bool visited;
 };
-
+#pragma region
 node::node()
 // Constructor, creates a new, uninitialized node. Id is initialized
 // elsewhere (by the graph constructor).
@@ -155,7 +155,7 @@ ostream &operator<<(ostream &ostr, const node &n)
 
    return ostr;
 }
-//Node class end
+#pragma endregion
 
 
 //Edge class begin
@@ -196,7 +196,7 @@ class edge
       bool marked;
       // edge is invalid
 };
-
+#pragma region
 edge::edge()
 // Constructor, sets edge to invalid, unmarked and unvisited.
 {
@@ -355,7 +355,8 @@ ostream &operator<<(ostream &ostr, const edge &e)
 
    return ostr;
 }
-//Edge class end
+#pragma endregion
+
 
 //Graph class begin
 class graph
@@ -418,7 +419,7 @@ class graph
    int NumEdges;
 
 };
-
+#pragma region graph 
 graph::graph()
    :edges(0,0), nodes(0)
 // Constructor that creates an empty graph. graph containing n nodes and no edges.
@@ -662,14 +663,14 @@ void graph::printNodes() const
 void graph::printEdges() const
 // Print edge information about the graph.
 {
-   cout << "Num edges: " << numEdges() << endl;
+	cout << "Num edges: " << numEdges() << endl;
 
-   for (int i = 0; i < numNodes(); i++)
-      for (int j = 0; j < numNodes(); j++)
-      {
-	 if (edges[i][j].isValid())
-	    cout << getEdge(i,j);
-      }
+	for (int i = 0; i < numNodes(); i++)
+		for (int j = 0; j < numNodes(); j++)
+		{
+			if (edges[i][j].isValid())
+				cout << getEdge(i,j);
+		}
 }
 
 ostream &operator<<(ostream &ostr, const graph &g)
@@ -893,3 +894,4 @@ bool graph::allNodesMarked()
 
    return true;
 }
+#pragma endregion

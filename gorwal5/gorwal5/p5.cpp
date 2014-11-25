@@ -22,7 +22,8 @@ class maze
       void mapMazeToGraph(graph &g);
 	  void findPathNonRecursive(graph &g);
 
-
+	  bool findPathRecursive(node n, graph g);
+	  vector<string> output;
    private:
       int rows; // number of rows in the maze
       int cols; // number of columns in the maze
@@ -178,6 +179,41 @@ void maze::mapMazeToGraph(graph &g)
 	
 }
 
+bool maze::findPathRecursive(node n, graph g)
+{
+	n.visit();
+
+	if (n.getId() == g.numNodes()-1)
+	{
+		output.push_back("End of maze.\n");
+		return true;
+	}
+	else if (g.allNodesVisited()){
+		return false;
+	}
+	for (int i = 0; i <= g.numNodes(); i++){
+		if (g.isEdge(n.getId(),i) && !g.isVisited(i) && !g.isMarked(i)){
+			if (i == n.getId()+1)
+				output.push_back("right");
+			if (i == n.getId()-1)
+				output.push_back("left");
+			if (i == n.getId()+cols)
+				output.push_back("down");
+			if (i == n.getId()-cols)
+				output.push_back("up");
+			if (findPathRecursive(g.getNode(i),g))
+				return true;
+		}
+	}
+	//dead end?
+	n.mark(); //using mark for paths already taken
+	n.unVisit();
+	if (findPathRecursive(g.getNode(0), g)) //just start over, not sure how to go back
+		return true;
+	else
+		return false;
+}
+
 void maze::findPathNonRecursive(graph &g)
 {
 	vector<string> moves;
@@ -284,6 +320,13 @@ int main()
 			graph g;
 			m.mapMazeToGraph(g);
 			m.findPathNonRecursive(g);
+
+			if (m.findPathRecursive(g.getNode(0), g)){
+				while(!m.output.empty()){
+					cout << m.output.front();
+					m.output.pop_back();
+				}
+			}
 		}
 
 

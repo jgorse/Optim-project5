@@ -22,7 +22,7 @@ class maze
       void mapMazeToGraph(graph &g);
 	  void findPathNonRecursive(graph &g);
 
-	  bool findPathRecursive(node n, graph g);
+	  bool findPathRecursive(node &n, graph &g);
 	  vector<string> output;
    private:
       int rows; // number of rows in the maze
@@ -179,7 +179,7 @@ void maze::mapMazeToGraph(graph &g)
 	
 }
 
-bool maze::findPathRecursive(node n, graph g)
+bool maze::findPathRecursive(node &n, graph &g)
 {
 	n.visit();
 
@@ -331,14 +331,30 @@ int main()
 			maze m(fin);
 			graph g;
 			m.mapMazeToGraph(g);
+			cout<<"***********Non-recursive solution**********\n";
 			m.findPathNonRecursive(g);
-			/*
-			if (m.findPathRecursive(g.getNode(0), g)){
-				while(!m.output.empty()){
-					cout << m.output.front();
-					m.output.pop_back();
+			
+			
+			//cout<<"\n\n***********Recursive solution**********\n";
+			//if (m.findPathRecursive(g.getNode(0), g))
+			{
+				int i = 0, j = 0, count = m.output.size();
+				for(int x = 0; x<count; x++)
+				{
+					m.print(7, 10, i, j);
+					cout<<"\n\n"<<m.output[x]<<"\n";
+
+					if(m.output[x] == "up")
+						i--;
+					if(m.output[x] == "down")
+						i++;
+					if(m.output[x] == "left")
+						j--;
+					if(m.output[x] == "right")
+						j++;
+			
 				}
-			}*/
+			}
 		}
 
 

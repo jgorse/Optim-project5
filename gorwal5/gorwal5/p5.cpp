@@ -403,6 +403,8 @@ int main()
 			
 				}
 			}
+			else
+				cout << "No valid path found.\n";
 		}
 
 

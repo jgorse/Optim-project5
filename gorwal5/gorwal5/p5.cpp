@@ -23,6 +23,7 @@ class maze
 	  void findPathNonRecursive(graph &g);
 
 	  bool findPathRecursive(node &n, graph &g);
+	  bool findShortestPath1(node &n, graph &g);
 	  vector<string> output;
    private:
       int rows; // number of rows in the maze
@@ -209,21 +210,21 @@ bool maze::findPathRecursive(node &n, graph &g)
 	n.mark(); //using mark for paths already taken
 	n.unVisit();
 	//visit adjacent visited but unmarked node
-			for(int temp = g.numNodes()-1; temp >= 0; temp--)
-			{	
-				if(g.isEdge(n.getId(), temp)) //if current has an adjcent node
-				{
-					if(g.getNode(temp).isVisited() && !g.getNode(temp).isMarked())//if adjacent node is unvisited
-					{
-						if (!output.empty())
-							output.pop_back();
-						if (findPathRecursive(g.getNode(temp),g))
-							return true;
-						else
-							return false;
-					}
-				}
+	for(int temp = g.numNodes()-1; temp >= 0; temp--)
+	{	
+		if(g.isEdge(n.getId(), temp)) //if current has an adjcent node
+		{
+			if(g.getNode(temp).isVisited() && !g.getNode(temp).isMarked())//if adjacent node is unvisited
+			{
+				if (!output.empty())
+					output.pop_back();
+				if (findPathRecursive(g.getNode(temp),g))
+					return true;
+				else
+					return false;
 			}
+		}
+	}
 }
 
 void maze::findPathNonRecursive(graph &g)
@@ -309,6 +310,53 @@ void maze::findPathNonRecursive(graph &g)
 
 }
 
+bool maze::findShortestPath1(node &n, graph &g)
+{
+	n.visit();
+
+	if (n.getId() == g.numNodes()-1)
+	{
+		output.push_back("End of maze.\n");
+		return true;
+	}
+	else if (g.allNodesVisited()){
+		return false;
+	}
+	for (int i = 0; i < g.numNodes(); i++){
+		if (g.isEdge(n.getId(),i) && !g.isVisited(i) && !g.isMarked(i)){
+			if (i == n.getId()+1)
+				output.push_back("right");
+			if (i == n.getId()-1)
+				output.push_back("left");
+			if (i == n.getId()+cols)
+				output.push_back("down");
+			if (i == n.getId()-cols)
+				output.push_back("up");
+			if (findPathRecursive(g.getNode(i),g))
+				return true;
+		}
+	}
+	//dead end?
+	n.mark(); //using mark for paths already taken
+	n.unVisit();
+	//visit adjacent visited but unmarked node
+	for(int temp = g.numNodes()-1; temp >= 0; temp--)
+	{	
+		if(g.isEdge(n.getId(), temp)) //if current has an adjcent node
+		{
+			if(g.getNode(temp).isVisited() && !g.getNode(temp).isMarked())//if adjacent node is unvisited
+			{
+				if (!output.empty())
+					output.pop_back();
+				if (findPathRecursive(g.getNode(temp),g))
+					return true;
+				else
+					return false;
+			}
+		}
+	}
+}
+
 int main()
 {
 	//char x;
@@ -331,12 +379,12 @@ int main()
 			maze m(fin);
 			graph g;
 			m.mapMazeToGraph(g);
-			cout<<"***********Non-recursive solution**********\n";
-			m.findPathNonRecursive(g);
+			//cout<<"***********Non-recursive solution**********\n";
+			//m.findPathNonRecursive(g);
 			
 			
-			//cout<<"\n\n***********Recursive solution**********\n";
-			//if (m.findPathRecursive(g.getNode(0), g))
+			cout<<"\n\n***********Depth-first search**********\n";
+			if (m.findShortestPath1(g.getNode(0), g))
 			{
 				int i = 0, j = 0, count = m.output.size();
 				for(int x = 0; x<count; x++)

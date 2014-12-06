@@ -7,8 +7,18 @@
 #include <fstream>
 #include "d_matrix.h"
 #include "graph.h"
+#include <queue>
 
 using namespace std;
+
+struct pathnode
+{
+	int current;
+	int previous;
+	bool flag;
+	string move;
+	pathnode(int c, int p, string m){move = m, current = c; previous = p; flag = false;}
+};
 
 class maze
 {
@@ -24,6 +34,7 @@ class maze
 
 	  bool findPathRecursive(node &n, graph &g);
 	  bool findShortestPath1(node &n, graph &g);
+	  bool findShortestPath2(node &n, graph &g);
 	  vector<string> output;
    private:
       int rows; // number of rows in the maze
@@ -332,7 +343,7 @@ bool maze::findShortestPath1(node &n, graph &g)
 				output.push_back("down");
 			if (i == n.getId()-cols)
 				output.push_back("up");
-			if (findPathRecursive(g.getNode(i),g))
+			if (findShortestPath1(g.getNode(i),g))
 				return true;
 		}
 	}
@@ -348,13 +359,126 @@ bool maze::findShortestPath1(node &n, graph &g)
 			{
 				if (!output.empty())
 					output.pop_back();
-				if (findPathRecursive(g.getNode(temp),g))
+				if (findShortestPath1(g.getNode(temp),g))
 					return true;
 				else
 					return false;
 			}
 		}
 	}
+}
+
+bool maze::findShortestPath2(node &n, graph &g)
+{
+	node current, neighbor;
+	int i;
+	vector<pathnode*> path;
+	queue <node> Q;
+
+	g.visit(0);
+	Q.push(n);
+	path.push_back(new pathnode(0, -1, "Origin"));
+
+	while( !Q.empty() )
+	{
+		current = Q.front();
+		Q.pop();
+		
+		//If at the end of the maze
+		if(current.getId() == g.numNodes()-1)
+		{
+			int x;
+			x = current.getId();
+
+			//Trace path backwards from endpoint using path->previous
+			while(x != -1)
+			{
+				for(i = 0; i < current.getId(); i++)
+				{
+					if(path[i]->current == x)
+						break;
+				}
+				path[i]->flag = true;
+				x = path[i]->previous;
+			}
+
+			//Print path
+			cout<<"Origin\n";
+			int i=0, j=0;
+			for(unsigned int iter=1; iter<path.size(); iter++)
+			{
+				if(path[iter]->flag)
+				{
+					print(rows, cols, i, j);
+					cout<<"\n"<<path[iter]->move<<"\n";
+
+					if(path[iter]->move == "Up")
+						i--;
+					if(path[iter]->move == "Down")
+						i++;
+					if(path[iter]->move == "Left")
+						j--;
+					if(path[iter]->move == "Right")
+						j++;
+				}
+
+			}
+			print(rows, cols, i, j);
+
+			return true;
+		}
+
+		//Queue not empty, still unvisited nodes
+		else
+		{
+			
+			//Current's right neighbor
+			i = current.getId() + 1;
+			if( i > -1 && i < 70 && g.isEdge(current.getId(), i) && !g.isVisited(i) )
+			{
+				neighbor = g.getNode(i);
+				g.visit(i);
+				Q.push(neighbor);
+				path.push_back(new pathnode(i, current.getId(), "Right"));
+			}
+
+			
+			//Current's left neighbor
+			i = current.getId() - 1;
+			if( i > -1 && i < 70 &&  g.isEdge(current.getId(), i) && !g.isVisited(i) )
+			{
+				neighbor = g.getNode(i);
+				g.visit(i);
+				Q.push(neighbor);
+				path.push_back(new pathnode(i, current.getId(), "Left"));
+			}
+
+			
+			//Current's down neighbor
+			i = current.getId() + 10;
+			if( i > -1 && i < 70 &&  g.isEdge(current.getId(), i) && !g.isVisited(i) )
+			{
+				neighbor = g.getNode(i);
+				g.visit(i);
+				Q.push(neighbor);
+				path.push_back(new pathnode(i, current.getId(), "Down"));
+			}
+
+			
+			//Current's up neighbor
+			i = current.getId() - 10;
+			if( i > -1 && i < 70 &&  g.isEdge(current.getId(), i) && !g.isVisited(i) )
+			{
+				neighbor = g.getNode(i);
+				g.visit(i);
+				Q.push(neighbor);
+				path.push_back(new pathnode(i, current.getId(), "Up"));
+			}
+		}
+	}
+
+	//Queue empty, no solution found
+	return false;
 }
 
 int main()
@@ -383,7 +507,7 @@ int main()
 			//m.findPathNonRecursive(g);
 			
 			
-			cout<<"\n\n***********Depth-first search**********\n";
+			/*cout<<"\n\n***********Depth-first search**********\n";
 			if (m.findShortestPath1(g.getNode(0), g))
 			{
 				int i = 0, j = 0, count = m.output.size();
@@ -405,6 +529,12 @@ int main()
 			}
 			else
 				cout << "No valid path found.\n";
+			*/
+
+			cout<<"***********Breadth-First Search**********\n";
+			if( !m.findShortestPath2( g.getNode(0), g) )
+				cout<<"No solution\n";
+
 		}
 
 

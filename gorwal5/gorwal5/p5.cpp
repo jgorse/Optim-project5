@@ -20,6 +20,13 @@ struct pathnode
 	pathnode(int c, int p, string m){move = m, current = c; previous = p; flag = false;}
 };
 
+struct pathdist
+{
+	int distance;
+	vector<string> moves;
+	pathdist(int d){distance = d;}
+};
+
 class maze
 {
    public:
@@ -31,10 +38,12 @@ class maze
       int getMap(int i, int j) const;
       void mapMazeToGraph(graph &g);
 	  void findPathNonRecursive(graph &g);
-
 	  bool findPathRecursive(node &n, graph &g);
+
 	  bool findShortestPath1(node &n, graph &g);
 	  bool findShortestPath2(node &n, graph &g);
+	  bool findShortestPath3(node &n, graph &g);
+
 	  vector<string> output;
    private:
       int rows; // number of rows in the maze
@@ -434,7 +443,7 @@ bool maze::findShortestPath2(node &n, graph &g)
 			
 			//Current's right neighbor
 			i = current.getId() + 1;
-			if( i > -1 && i < 70 && g.isEdge(current.getId(), i) && !g.isVisited(i) )
+			if( i > -1 && i < g.numNodes() && g.isEdge(current.getId(), i) && !g.isVisited(i) )
 			{
 				neighbor = g.getNode(i);
 				g.visit(i);
@@ -445,7 +454,7 @@ bool maze::findShortestPath2(node &n, graph &g)
 			
 			//Current's left neighbor
 			i = current.getId() - 1;
-			if( i > -1 && i < 70 &&  g.isEdge(current.getId(), i) && !g.isVisited(i) )
+			if( i > -1 && i < g.numNodes() &&  g.isEdge(current.getId(), i) && !g.isVisited(i) )
 			{
 				neighbor = g.getNode(i);
 				g.visit(i);
@@ -455,8 +464,8 @@ bool maze::findShortestPath2(node &n, graph &g)
 
 			
 			//Current's down neighbor
-			i = current.getId() + 10;
-			if( i > -1 && i < 70 &&  g.isEdge(current.getId(), i) && !g.isVisited(i) )
+			i = current.getId() + cols;
+			if( i > -1 && i < g.numNodes() &&  g.isEdge(current.getId(), i) && !g.isVisited(i) )
 			{
 				neighbor = g.getNode(i);
 				g.visit(i);
@@ -466,8 +475,8 @@ bool maze::findShortestPath2(node &n, graph &g)
 
 			
 			//Current's up neighbor
-			i = current.getId() - 10;
-			if( i > -1 && i < 70 &&  g.isEdge(current.getId(), i) && !g.isVisited(i) )
+			i = current.getId() - cols;
+			if( i > -1 && i < g.numNodes() &&  g.isEdge(current.getId(), i) && !g.isVisited(i) )
 			{
 				neighbor = g.getNode(i);
 				g.visit(i);
@@ -479,6 +488,143 @@ bool maze::findShortestPath2(node &n, graph &g)
 
 	//Queue empty, no solution found
 	return false;
+}
+
+bool maze::findShortestPath3(node &n, graph &g)
+{	
+	//Create vector<pathdist> dist
+		//dist[i].distance represents the shortest path between the start and the i'th node
+	    //dist[i].moves is the shortest list of moves from the start to the i'th node
+	node current, neighbor;
+	vector<pathdist*> dist;
+	queue<int> Q;
+
+	//set distance of all to 9999 initially
+	//add every vertex to a queue
+	int numNodes = g.numNodes();
+	for(int i = 0; i < numNodes; i++)
+	{
+		dist.push_back(new pathdist(9999));
+		Q.push(i);
+	}
+
+	//dist[0].distance = 0 because dist[0] is the origin
+	dist[0]->distance = 0;
+	dist[0]->moves.push_back("Origin");
+
+
+	while( !Q.empty() )
+	{
+		
+		//If current has distance 9999, its a dead end with no neighbors. Pop it off.
+		if(dist[Q.front()]->distance == 9999 )
+		{
+			//If it's a legal space but dead end, add it back to back of queue
+			if(isLegal( Q.front()/cols, Q.front()%cols) )
+				Q.push(Q.front());
+
+			Q.pop();
+			continue;
+		}
+
+		//get node at front of queue, visit it.
+		current = g.getNode(Q.front());
+		Q.pop();
+		g.visit(current.getId() );
+
+		//check all neighbors of current
+
+
+		//Current's right neighbor
+		int i = current.getId() + 1;
+		if( i > -1 && i < g.numNodes() && g.isEdge(current.getId(), i) && !g.isVisited(i) )
+		{
+			neighbor = g.getNode(i);
+
+			//If neighbor is a valid space, check: is neighbor's distance greater than current distance +1?
+			if( dist[neighbor.getId()]->distance > dist[current.getId()]->distance + 1)
+			{
+				//current+1 is the shortest distance between neighbor and origin. copy current to neighbor and add 1 move
+				dist[neighbor.getId()]->distance = dist[current.getId()]->distance + 1;
+				dist[neighbor.getId()]->moves    = dist[current.getId()]->moves;
+				dist[neighbor.getId()]->moves.push_back("Right"); 
+			}
+		}
+
+			
+		//Current's left neighbor
+		i = current.getId() - 1;
+		if( i > -1 && i < g.numNodes() &&  g.isEdge(current.getId(), i) && !g.isVisited(i) )
+		{
+			neighbor = g.getNode(i);
+
+			if( dist[neighbor.getId()]->distance > dist[current.getId()]->distance + 1)
+			{
+				dist[neighbor.getId()]->distance = dist[current.getId()]->distance + 1;
+				dist[neighbor.getId()]->moves    = dist[current.getId()]->moves;
+				dist[neighbor.getId()]->moves.push_back("Left"); //i.e. if w is v's down neighbor, push "Down" to w's moves
+			}
+		}
+
+			
+		//Current's down neighbor
+		i = current.getId() + cols;
+		if( i > -1 && i < g.numNodes() &&  g.isEdge(current.getId(), i) && !g.isVisited(i) )
+		{
+			neighbor = g.getNode(i);
+
+			if( dist[neighbor.getId()]->distance > dist[current.getId()]->distance + 1)
+			{
+				dist[neighbor.getId()]->distance = dist[current.getId()]->distance + 1;
+				dist[neighbor.getId()]->moves    = dist[current.getId()]->moves;
+				dist[neighbor.getId()]->moves.push_back("Down"); 
+			}
+		}
+
+			
+		//Current's up neighbor
+		i = current.getId() - cols;
+		if( i > -1 && i < g.numNodes() &&  g.isEdge(current.getId(), i) && !g.isVisited(i) )
+		{
+			neighbor = g.getNode(i);
+
+			if( dist[neighbor.getId()]->distance > dist[current.getId()]->distance + 1)
+			{
+				dist[neighbor.getId()]->distance = dist[current.getId()]->distance + 1;
+				dist[neighbor.getId()]->moves    = dist[current.getId()]->moves;
+				dist[neighbor.getId()]->moves.push_back("Up"); 
+			}
+		}
+	}
+	
+	if(dist[numNodes-1]->distance == 9999)
+		return false;
+	else
+	{
+		//last element in dist has shortest path from origin to destination
+		//Print path
+
+		int i=0, j=0;
+		cout<<"\n"<<dist[numNodes-1]->moves[0]<<"\n";
+		for(int iter=1; iter <= dist[numNodes-1]->distance; iter++)
+		{
+			print(rows, cols, i, j);
+			cout<<"\n"<<dist[numNodes-1]->moves[iter]<<"\n";
+
+			if(dist[numNodes-1]->moves[iter] == "Up")
+				i--;
+			if(dist[numNodes-1]->moves[iter] == "Down")
+				i++;
+			if(dist[numNodes-1]->moves[iter] == "Left")
+				j--;
+			if(dist[numNodes-1]->moves[iter] == "Right")
+				j++;
+
+		}
+		print(rows, cols, i, j);
+
+		return true;
+	}
 }
 
 int main()
@@ -507,7 +653,8 @@ int main()
 			//m.findPathNonRecursive(g);
 			
 			
-			/*cout<<"\n\n***********Depth-first search**********\n";
+			/*
+			cout<<"\n\n***********Depth-first search**********\n";
 			if (m.findShortestPath1(g.getNode(0), g))
 			{
 				int i = 0, j = 0, count = m.output.size();
@@ -531,10 +678,17 @@ int main()
 				cout << "No valid path found.\n";
 			*/
 
+
+			/*
 			cout<<"***********Breadth-First Search**********\n";
 			if( !m.findShortestPath2( g.getNode(0), g) )
 				cout<<"No solution\n";
+			*/
 
+
+			cout<<"***********Dijkstra's Algorithm Search**********\n";
+			if( !m.findShortestPath3( g.getNode(0), g) )
+				cout<<"No solution\n";
 		}
 
 
